@@ -8,7 +8,7 @@ document.getElementById('playerName').textContent = `Giocatore: ${playerName}`;
 let score = 0;
 let fruits = [];
 let gameOver = false;
-let elapsedTime = 0; // tempo passato, serve per aumentare la frequenza dei rossi
+let elapsedTime = 0; // serve per aumentare la frequenza dei rossi
 
 // Leaderboard
 let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
@@ -68,8 +68,11 @@ function update() {
     // Collisione con player
     if(f.y + f.size > player.y && f.y < player.y + player.height &&
        f.x + f.size > player.x && f.x < player.x + player.width) {
-      if(f.type === 'good') score++;
-      else endGame(); // toccato rosso = morte immediata
+      if(f.type === 'good') {
+        score++;
+      } else {
+        endGame(); // toccato rosso = morte immediata
+      }
       fruits.splice(i,1);
     } else if(f.y > canvas.height) {
       fruits.splice(i,1);
@@ -90,11 +93,12 @@ function endGame() {
   alert(`Hai toccato un frutto velenoso! Hai fatto ${score} punti.`);
 }
 
-// Aggiorna leaderboard
+// Aggiorna leaderboard (top 5)
 function updateLeaderboard() {
   const list = document.getElementById('scoreList');
   list.innerHTML = '';
-  leaderboard.slice(0,10).forEach(entry=>{
+
+  leaderboard.slice(0,5).forEach(entry => {
     const li = document.createElement('li');
     li.textContent = `${entry.name}: ${entry.score}`;
     list.appendChild(li);
@@ -103,3 +107,4 @@ function updateLeaderboard() {
 
 // Avvia gioco
 update();
+
